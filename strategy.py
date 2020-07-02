@@ -10,11 +10,11 @@ class Strategy():
     def __init__(self):
         # strategy property
         self.subscribedBooks = {
-            'Bitfinex': {
-                'pairs': ['ETH-USDT'],
+            'Binance': {
+                'pairs': ['BTC-USDT'],
             },
         }
-        self.period = 10 * 60
+        self.period = 10 * 60*6*2
         self.options = {}
 
         # user defined class attribute
@@ -51,17 +51,11 @@ class Strategy():
         # calculate current ma cross status
         cur_cross = self.get_current_ma_cross()
 
-        Log('info: ' + str(information['candles'][exchange][pair][0]['time']) + ', ' + str(information['candles'][exchange][pair][0]['open']) + ', assets' + str(self['assets'][exchange]['ETH']))
+        Log('info: ' + str(information['candles'][exchange][pair][0]['time']) + ', ' + str(information['candles'][exchange][pair][0]['open']) + ', assets' + str(self['assets'][exchange]['BTC']))
 
-        if cur_cross is None:
-            return []
 
-        if self.last_cross_status is None:
-            self.last_cross_status = cur_cross
-            return []
 
-        # cross up
-        if self.last_type == 'sell' and cur_cross == self.UP and self.last_cross_status == self.DOWN:
+        if 1:
             Log('buying, opt1:' + self['opt1'])
             self.last_type = 'buy'
             self.last_cross_status = cur_cross
@@ -69,20 +63,6 @@ class Strategy():
                 {
                     'exchange': exchange,
                     'amount': 1,
-                    'price': -1,
-                    'type': 'MARKET',
-                    'pair': pair,
-                }
-            ]
-        # cross down
-        elif self.last_type == 'buy' and cur_cross == self.DOWN and self.last_cross_status == self.UP:
-            Log('selling, ' + exchange + ':' + pair)
-            self.last_type = 'sell'
-            self.last_cross_status = cur_cross
-            return [
-                {
-                    'exchange': exchange,
-                    'amount': -1,
                     'price': -1,
                     'type': 'MARKET',
                     'pair': pair,
